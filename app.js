@@ -21,7 +21,6 @@ mongoose.connect(process.env.MONGODB_URI, {
 
 const mapTasks = (taskData) => {
     return taskData.map((task) => {
-        // Create task instances based on stored action
         switch (task.action) {
             case 'logMessage':
                 return new Task(task.name, async (context) => {
