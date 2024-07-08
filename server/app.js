@@ -3,13 +3,13 @@ const path = require('path');
 require('dotenv').config();
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+const cors = require('cors');
 const mongoose = require('mongoose');
 const { WorkflowModel } = require('./models/workflow');
 
 const { Task, Workflow } = require('./lib/workflow');
 
 const app = express();
-console.log(process.env.MONGODB_URI)
 mongoose.connect(process.env.MONGODB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -39,6 +39,7 @@ const mapTasks = (taskData) => {
 };
 
 app.use(logger('dev'));
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());

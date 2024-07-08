@@ -1,0 +1,12 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="bin/www" type="NodeJSConfigurationType" path-to-js-file="server/bin/www" working-dir="$PROJECT_DIR$">
+    <envs>
+      <env name="DEBUG" value="workflow-automation-poc:*" />
+      <env name="MONGODB_URI" value="mongodb://localhost:27017/workflow_automation" />
+    </envs>
+    <EXTENSION ID="com.intellij.lang.javascript.buildTools.npm.rc.StartBrowserRunConfigurationExtension">
+      <browser url="http://localhost:3000/" />
+    </EXTENSION>
+    <method v="2" />
+  </configuration>
+</component>
