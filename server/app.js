@@ -58,10 +58,26 @@ const mapTasks = (taskData) => {
                         context.conditionMet = false;
                     }
                 });
+            case 'validatePayload':
+                return new Task(task.name, async (context) => {
+                    const { payload, schema } = task.parameters;
+                    const isValid = validatePayload(context?.payload || payload, schema);
+                    console.log(`Payload is ${isValid ? 'valid' : 'invalid'}`);
+                    context.validationResult = isValid;
+                });
             default:
                 throw new Error(`Unknown action: ${task.action}`);
         }
     });
+};
+
+const validatePayload = (payload, schema) => {
+    for (const [key, type] of Object.entries(schema)) {
+        if (typeof payload[key] !== type) {
+            return false;
+        }
+    }
+    return true;
 };
 
 app.use(logger('dev'));
