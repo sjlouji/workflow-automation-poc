@@ -24,13 +24,39 @@ const mapTasks = (taskData) => {
         switch (task.action) {
             case 'logMessage':
                 return new Task(task.name, async (context) => {
-                    console.log(`Message: ${task.parameters.message}`);
+                    console.log(`Message: ${context?.message || task.parameters.message}`);
                 });
             case 'addNumbers':
                 return new Task(task.name, async (context) => {
-                    const result = task.parameters.num1 + task.parameters.num2;
+                    const result = (context?.num1 || task.parameters.num1 )+ (context?.num2 || task.parameters.num2);
                     console.log(`Sum: ${result}`);
                     context.result = result;
+                });
+            case 'httpRequest':
+                return new Task(task.name, async (context) => {
+                    const response = await fetch(context?.url || task.parameters.url, {
+                        method: task.parameters.method || 'GET',
+                        headers: task.parameters.headers || {},
+                        body: task.parameters.body ? JSON.stringify(task.parameters.body) : undefined
+                    });
+                    const data = await response.json();
+                    console.log(`HTTP Response: ${JSON.stringify(data)}`);
+                    context.response = data;
+                });
+            case 'delay':
+                return new Task(task.name, async (context) => {
+                    await new Promise(resolve => setTimeout(resolve, context?.duration || task.parameters.duration));
+                    console.log(`Delayed for ${context?.duration || task.parameters.duration} ms`);
+                });
+            case 'condition':
+                return new Task(task.name, async (context) => {
+                    if (eval(task.parameters.condition)) {
+                        console.log(`Condition met: ${task.parameters.condition}`);
+                        context.conditionMet = true;
+                    } else {
+                        console.log(`Condition not met: ${task.parameters.condition}`);
+                        context.conditionMet = false;
+                    }
                 });
             default:
                 throw new Error(`Unknown action: ${task.action}`);

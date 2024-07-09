@@ -5,7 +5,7 @@ class Task {
     }
 
     async run(context) {
-        console.log(`Running task: ${this.name}`);
+        console.debug(`Running task: ${this.name}`);
         await this.execute(context);
     }
 }
@@ -20,12 +20,12 @@ class Workflow {
         this.tasks.push(task);
     }
 
-    async run(context) {
-        console.log(`Starting workflow: ${this.name}`);
+    async run(context, params = {}) {
+        console.debug(`Starting workflow: ${this.name}`);
         for (const task of this.tasks) {
-            await task.run(context);
+            await task.run(context, params);
         }
-        console.log(`Workflow ${this.name} completed.`);
+        console.debug(`Workflow ${this.name} completed.`);
     }
 }
 
