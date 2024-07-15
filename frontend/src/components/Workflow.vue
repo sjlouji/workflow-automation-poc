@@ -1,31 +1,3 @@
-<template>
-  <div class="container">
-    <h1>Draggable Workflow Manager</h1>
-    <div class="form-group">
-      <label for="workflowName">Workflow Name</label>
-      <input type="text" id="workflowName" v-model="workflow.name" required />
-    </div>
-    <div class="workflow-container">
-      <h2>Workflow Steps</h2>
-      <VueDragula ref="dragula" v-model="workflow.steps" :options="dragulaOptions">
-        <div v-for="(step, index) in workflow.steps" :key="index" class="workflow-step">
-          <input type="text" :value="step" @input="updateStep($event, index)" />
-        </div>
-      </VueDragula>
-    </div>
-    <button @click="addStep">Add Step</button>
-    <button @click="saveWorkflow">Save Workflow</button>
-    <button @click="executeWorkflow">Execute Workflow</button>
-
-    <div v-if="savedWorkflow" class="saved-workflow">
-      <h2>Saved Workflow</h2>
-      <p><strong>Name:</strong> {{ savedWorkflow.name }}</p>
-      <ul>
-        <li v-for="(step, index) in savedWorkflow.steps" :key="index">{{ step }}</li>
-      </ul>
-    </div>
-  </div>
-</template>
 
 <script>
 import axios from 'axios';

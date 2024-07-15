@@ -1,27 +1,19 @@
-<template>
-  <div id="app">
-    <Workflow />
-  </div>
-</template>
-
-<script>
-import Workflow from './components/Workflow.vue';
-
-export default {
-  name: 'App',
-  components: {
-    Workflow
-  }
-};
+<script setup>
+import Workflow from "@/components/workflow/workflow.vue";
+import Controller from "@/components/workflow/controller.vue";
 </script>
 
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
-
-body {
-  font-family: 'Roboto', sans-serif;
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-</style>
+<template>
+  <div id="app">
+    <el-row :gutter="20" class="vue-flow-layout">
+      <el-col :span="18" >
+        <Workflow />
+      </el-col>
+      <el-col :span="6">
+        <div class="vue-flow-controller">
+          <Controller />
+        </div>
+      </el-col>
+    </el-row>
+  </div>
+</template>

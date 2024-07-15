@@ -1,12 +1,12 @@
-import './assets/main.css'
+import './assets/main.css';
 
-import { createApp } from 'vue'
-import App from './App.vue'
-import VueDragula from 'vuedraggable';
-
+import { createApp } from 'vue';
+import App from './App.vue';
+import ElementPlus from 'element-plus'
+import 'element-plus/dist/index.css'
 
 const app = createApp(App)
 
+app.use(ElementPlus);
 app.config.productionTip = false;
-app.use(VueDragula);
 app.mount('#app')
