@@ -1,50 +1,71 @@
 <script setup>
-import { ref } from 'vue'
-import { Background } from '@vue-flow/background'
+import {markRaw, onMounted, ref} from 'vue'
+import {VueFlow, useVueFlow} from '@vue-flow/core'
+import {Background} from '@vue-flow/background'
+import {MiniMap} from '@vue-flow/minimap'
+import Controls from '@/components/workflow/controls.vue'
+import useWorkflowStore from '@/store/workflow.js';
 
-import { VueFlow } from '@vue-flow/core'
+import ContractCreationNode from '@/components/controller/nodes/contract-creation.vue';
+import NotificationNode from '@/components/controller/nodes/notification.vue';
+import ApprovalRoles from '@/components/controller/nodes/approval.vue';
+import TransformationValidation from '@/components/controller/nodes/transformation_validation.vue';
 
-const nodes = ref([
-  {
-    id: '1',
-    type: 'input',
-    data: { label: 'Node 1' },
-    position: { x: 250, y: 5 },
-  },
-  {
-    id: '2',
-    data: { label: 'Node 2' },
-    position: { x: 100, y: 100 },
-  },
-  {
-    id: '3',
-    data: { label: 'Node 3' },
-    position: { x: 400, y: 100 },
-  },
-  {
-    id: '4',
-    data: { label: 'Node 4' },
-    position: { x: 400, y: 200 },
-  },
-])
+const nodeTypes = {
+  contract_creation: markRaw(ContractCreationNode),
+  notification: markRaw(NotificationNode),
+  approval: markRaw(ApprovalRoles),
+  transformation_validation: markRaw(TransformationValidation),
+}
 
-const edges = ref([
-  { id: 'e1-2', source: '1', target: '2' },
-  { id: 'e1-3', source: '1', target: '3' },
-  { id: 'e3-4', source: '3', target: '4' },
-])
+let drawer = ref(false)
+const drawerHeader = ref({})
+
+const vueFlowInstance = useVueFlow();
+const store = useWorkflowStore();
+
+const nodes = store.nodes;
+const edges = store.edges;
+
+const initializeFlow = () => {
+  vueFlowInstance.fitView();
+}
+
+const handleNodeDragStop = ({node}) => {
+  store.onDragListener(node);
+}
+
+const handleConnect = (connection) => {
+  vueFlowInstance.addEdges(connection)
+}
+
+onMounted(() => {
+  vueFlowInstance.onInit(initializeFlow);
+  vueFlowInstance.onNodeDragStop(handleNodeDragStop);
+  vueFlowInstance.onConnect(handleConnect);
+});
+
 </script>
 
 <template>
-  <VueFlow :nodes="nodes" :edges="edges" class="" fit-view-on-init>
-    <Background />
+  <VueFlow
+      v-model:nodes="nodes"
+      v-model:edges="edges"
+      fit-view-on-init
+      class="basic-flow"
+      :default-viewport="{ zoom: 1 }"
+      :min-zoom="1"
+      :max-zoom="2"
+      :apply-changes="false"
+      :node-types="nodeTypes"
+  >
+    <Background pattern-color="#aaa"/>
+    <MiniMap pannable zoomable/>
+    <Controls />
   </VueFlow>
 </template>
 
 <style>
-#app {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-}
+@import '@vue-flow/core/dist/style.css';
+@import '@vue-flow/core/dist/theme-default.css';
 </style>
